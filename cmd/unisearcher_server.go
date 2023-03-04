@@ -17,9 +17,11 @@ func main() {
 		port = utils.DefaultPort
 	}
 
+	// Define handlers
 	http.HandleFunc(utils.DefaultPath, handlers.DefaultHandler)
 	http.HandleFunc(utils.UniSearcherPath, handlers.UniSearcherHandler)
 	
+	// Start server
 	log.Println("Listening on port " + port)
 	log.Fatal(http.ListenAndServe(":"+port, nil))
 }
