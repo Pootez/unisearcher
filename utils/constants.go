@@ -25,4 +25,4 @@ const DiagPath = UniSearcherPath + "diag/"
 const UniversitiesApi = "http://universities.hipolabs.com"
 
 // CountriesApi is the URL for the countries API
-const CountriesApi = "https://restcountries.com/v2/name/peru"
+const CountriesApi = "https://restcountries.com"

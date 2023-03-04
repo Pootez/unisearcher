@@ -6,3 +6,10 @@ type Diag struct {
 	Version      string `json:"version"`
 	Uptime       string `json:"uptime"`
 }
+
+type Country struct {
+	Name struct {
+		Common string `json:"common"`
+	} `json:"name"`
+	Borders []string `json:"borders"`
+}
