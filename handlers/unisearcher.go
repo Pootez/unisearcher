@@ -4,8 +4,10 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"strings"
 	"time"
 	"unisearcher/utils"
+	"io"
 )
 
 // startTime is the time when the server started
@@ -44,7 +46,28 @@ func UniInfoHandler(w http.ResponseWriter, r *http.Request) {
 	// Handle request
 	switch r.Method {
 	case http.MethodGet:
-		fmt.Fprintf(w, "This endpoint isn't implemented yet.")
+		// Set content type
+		http.Header.Add(w.Header(), "content-type", "application/json; charset=utf-8")
+
+		// Get query
+		l := len(strings.Split(utils.UniInfoPath, "/")) - 1
+		query := strings.Replace(strings.Split(r.URL.Path, "/")[l], " ", "%20", -1)
+
+		// Get response from API
+		res, err := http.Get(utils.UniversitiesApi + "/search?name=" + query)
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return			
+		}
+		defer res.Body.Close()
+
+		// Write response to response
+		jsonData, err := io.ReadAll(res.Body)
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+		}
+
+		w.Write(jsonData)
 	default:
 		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
 	}
