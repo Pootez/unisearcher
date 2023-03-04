@@ -20,6 +20,9 @@ func main() {
 	// Define handlers
 	http.HandleFunc(utils.DefaultPath, handlers.DefaultHandler)
 	http.HandleFunc(utils.UniSearcherPath, handlers.UniSearcherHandler)
+	http.HandleFunc(utils.UniInfoPath, handlers.UniInfoHandler)
+	http.HandleFunc(utils.NeighbourPath, handlers.NeighbourHandler)
+	http.HandleFunc(utils.DiagPath, handlers.DiagHandler)
 	
 	// Start server
 	log.Println("Listening on port " + port)

@@ -22,3 +22,36 @@ func UniSearcherHandler (w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
 	}
 }
+
+// UniInfoHandler handles requests to the uniinfo endpoint
+func UniInfoHandler (w http.ResponseWriter, r *http.Request) {
+	// Handle request
+	switch r.Method {
+	case http.MethodGet:
+		fmt.Fprintf(w, "This endpoint isn't implemented yet.")
+	default:
+		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
+	}
+}
+
+// NeighbourHandler handles requests to the neighbourunis endpoint
+func NeighbourHandler (w http.ResponseWriter, r *http.Request) {
+	// Handle request
+	switch r.Method {
+	case http.MethodGet:
+		fmt.Fprintf(w, "This endpoint isn't implemented yet.")
+	default:
+		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
+	}
+}
+
+// DiagHandler handles requests to the diag endpoint
+func DiagHandler (w http.ResponseWriter, r *http.Request) {
+	// Handle request
+	switch r.Method {
+	case http.MethodGet:
+		fmt.Fprintf(w, "This endpoint isn't implemented yet.")
+	default:
+		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
+	}
+}
