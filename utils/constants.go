@@ -20,3 +20,9 @@ const NeighbourPath = UniSearcherPath + "neighbourunis/"
 
 // DiagPath is the path for the diagnostic endpoint
 const DiagPath = UniSearcherPath + "diag/"
+
+// UniversitiesApi is the URL for the universities API
+const UniversitiesApi = "http://universities.hipolabs.com"
+
+// CountriesApi is the URL for the countries API
+const CountriesApi = "https://restcountries.com/v2/name/peru"

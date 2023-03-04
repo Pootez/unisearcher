@@ -1,12 +1,28 @@
 package handlers
 
 import (
-	"net/http"
+	"encoding/json"
 	"fmt"
+	"net/http"
+	"time"
+	"unisearcher/utils"
 )
 
+// startTime is the time when the server started
+var startTime = time.Now()
+
+// uptime returns the uptime of the server
+func uptime() string {
+	return time.Since(startTime).String()
+}
+
+// init sets the start time
+func init() {
+	startTime = time.Now()
+}
+
 // UniSearcherHandler handles requests to the UniSearcher service
-func UniSearcherHandler (w http.ResponseWriter, r *http.Request) {
+func UniSearcherHandler(w http.ResponseWriter, r *http.Request) {
 	// Set content type
 	http.Header.Add(w.Header(), "content-type", "text/html; charset=utf-8")
 
@@ -24,7 +40,7 @@ func UniSearcherHandler (w http.ResponseWriter, r *http.Request) {
 }
 
 // UniInfoHandler handles requests to the uniinfo endpoint
-func UniInfoHandler (w http.ResponseWriter, r *http.Request) {
+func UniInfoHandler(w http.ResponseWriter, r *http.Request) {
 	// Handle request
 	switch r.Method {
 	case http.MethodGet:
@@ -35,7 +51,7 @@ func UniInfoHandler (w http.ResponseWriter, r *http.Request) {
 }
 
 // NeighbourHandler handles requests to the neighbourunis endpoint
-func NeighbourHandler (w http.ResponseWriter, r *http.Request) {
+func NeighbourHandler(w http.ResponseWriter, r *http.Request) {
 	// Handle request
 	switch r.Method {
 	case http.MethodGet:
@@ -46,11 +62,36 @@ func NeighbourHandler (w http.ResponseWriter, r *http.Request) {
 }
 
 // DiagHandler handles requests to the diag endpoint
-func DiagHandler (w http.ResponseWriter, r *http.Request) {
+func DiagHandler(w http.ResponseWriter, r *http.Request) {
 	// Handle request
 	switch r.Method {
 	case http.MethodGet:
-		fmt.Fprintf(w, "This endpoint isn't implemented yet.")
+		// Set content type
+		http.Header.Add(w.Header(), "content-type", "application/json; charset=utf-8")
+
+		// Get response from APIs
+		chanU := make(chan http.Response)
+		go utils.GetRequest(utils.UniversitiesApi, chanU)
+		respU := <-chanU
+
+		chanC := make(chan http.Response)
+		go utils.GetRequest(utils.CountriesApi, chanC)
+		respC := <-chanC
+
+		// Create diag struct
+		diag := utils.Diag{
+			UniApi:       respU.StatusCode,
+			CountriesApi: respC.StatusCode,
+			Version:      utils.Version,
+			Uptime:       uptime(),
+		}
+
+		// Write diag struct to response
+		jsonData, err := json.Marshal(diag)
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+		}
+		w.Write(jsonData)
 	default:
 		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
 	}
