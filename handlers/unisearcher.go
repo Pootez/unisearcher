@@ -62,7 +62,7 @@ func UniInfoHandler(w http.ResponseWriter, r *http.Request) {
 		}
 		defer res.Body.Close()
 
-		// Write response to response
+		// Read response
 		jsonData, err := io.ReadAll(res.Body)
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
@@ -215,12 +215,12 @@ func NeighbourHandler(w http.ResponseWriter, r *http.Request) {
 		}
 
 		// Write response to response
-		res, err := json.MarshalIndent(universities,"","        ")
+		resData, err := json.MarshalIndent(universities,"","        ")
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 		}
 
-		w.Write(res)
+		w.Write(resData)
 	default:
 		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
 	}
@@ -235,28 +235,34 @@ func DiagHandler(w http.ResponseWriter, r *http.Request) {
 		http.Header.Add(w.Header(), "content-type", "application/json; charset=utf-8")
 
 		// Get response from APIs
-		chanU := make(chan http.Response)
-		go utils.GetRequest(utils.UniversitiesApi, chanU)
-		ResU := <-chanU
+		resU, err := http.Get(utils.UniversitiesApi)
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+		defer resU.Body.Close()
 
-		chanC := make(chan http.Response)
-		go utils.GetRequest(utils.CountriesApi+"/v2/name/peru", chanC)
-		resC := <-chanC
+		resC, err := http.Get(utils.CountriesApi+"/v2/name/peru")
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+		defer resC.Body.Close()
 
 		// Create diag struct
 		diag := utils.Diag{
-			UniApi:       ResU.StatusCode,
+			UniApi:       resU.StatusCode,
 			CountriesApi: resC.StatusCode,
 			Version:      utils.Version,
 			Uptime:       uptime(),
 		}
 
 		// Write diag struct to response
-		res, err := json.MarshalIndent(diag,"","        ")
+		resData, err := json.MarshalIndent(diag,"","        ")
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 		}
-		w.Write(res)
+		w.Write(resData)
 	default:
 		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
 	}
