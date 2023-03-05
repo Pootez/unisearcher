@@ -68,7 +68,20 @@ func UniInfoHandler(w http.ResponseWriter, r *http.Request) {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 		}
 
-		w.Write(jsonData)
+		// Parse response
+		countries := []interface{}{}
+		err = json.Unmarshal(jsonData, &countries)
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+		}
+
+		// Write response to response
+		resData, err := json.MarshalIndent(countries,"","        ")
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+		}
+
+		w.Write(resData)
 	default:
 		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
 	}
@@ -197,12 +210,12 @@ func NeighbourHandler(w http.ResponseWriter, r *http.Request) {
 				if limitBool && len(unis) > limit {
 					unis = unis[:limit]
 				}
-				universities = append(universities, unis)
+				universities = append(universities, unis...)
 			}
 		}
 
 		// Write response to response
-		res, err := json.Marshal(universities)
+		res, err := json.MarshalIndent(universities,"","        ")
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 		}
@@ -239,11 +252,11 @@ func DiagHandler(w http.ResponseWriter, r *http.Request) {
 		}
 
 		// Write diag struct to response
-		jsonData, err := json.Marshal(diag)
+		res, err := json.MarshalIndent(diag,"","        ")
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 		}
-		w.Write(jsonData)
+		w.Write(res)
 	default:
 		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
 	}
