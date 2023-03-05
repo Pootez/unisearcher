@@ -1,5 +1,30 @@
-# Assignment 1
+# PROG2005 Assignment 1
 Sondre Espeland | *sondesp@ntnu.no* | 03.02.2023
+
+## Deployement
+Run "cmd/unisearcher_server.go". For windows, the file "init.bat" will build and run the server, creating "server.exe"
+Per default the server will be available under http://localhost:8080
+The assignment will also have a related render deployement link.
+
+## Endpoints
+- */*
+  - Will give a redirect to the unisearcher endpoint.
+- */unisearcher/v1/*
+  - Will give redirects to the relevant endpoints.
+- */unisearcher/v1/uniinfo/*
+  - Search for universities using complete or incomplete names.
+  - Paramseters:
+    - /{:partial_or_complete_university_name}/
+- */unisearcher/v1/neighbourunis/*
+  - Search for the universities of the neigbouring countries of a given country.
+  - Parameters:
+    - /{:country_name}/{:partial_or_complete_university_name}{?limit={:number}}
+    - limit is optional
+- */unisearcher/v1/diag/*
+  - View status codes of the two used apis:
+    - http://universities.hipolabs.com
+    - https://restcountries.com
+  - View version and uptime of the service.
 
 ## Specification
 ### Endpoints
