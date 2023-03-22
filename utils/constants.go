@@ -12,8 +12,8 @@ const DefaultPath = "/"
 // UniSearcherPath is the path for the UniSearcher server
 const UniSearcherPath = "/unisearcher/" + Version + "/"
 
-// UniInfoPath is the path for the uniinfo endpoint
-const UniInfoPath = UniSearcherPath + "uniinfo/"
+// UniinfoPath is the path for the uniinfo endpoint
+const UniinfoPath = UniSearcherPath + "uniinfo/"
 
 // NeighbourPath is the path for the neighbourunis endpoint
 const NeighbourPath = UniSearcherPath + "neighbourunis/"
